@@ -1,0 +1,18 @@
+<section class="exercise-list">
+  <h2>Exercise Library</h2>
+
+  @if (exercises.length > 0) {
+    <p class="count">{{ exercises.length }} exercises available</p>
+  }
+
+  <ul>
+    @for (exercise of exercises; track exercise.id) {
+      <li class="exercise-item">
+        <span class="exercise-name">{{ exercise.name }}</span>
+        <span class="exercise-muscle">{{ exercise.primaryMuscle }}</span>
+      </li>
+    } @empty {
+      <li class="empty">No exercises yet. Add one to get started.</li>
+    }
+  </ul>
+</section>
