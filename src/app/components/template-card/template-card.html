@@ -1,0 +1,20 @@
+<div class="template-container">
+  <h3>Workout Templates</h3>
+
+  <!-- @if block to check if templates exist -->
+  @if (templates.length > 0) {
+    <ul class="template-grid">
+      <!-- @for loop with mandatory track expression -->
+      @for (item of templates; track item.id) {
+        <li class="template-card-item">
+          <span class="id-badge">#{{ item.id }}</span>
+          <span class="template-name">{{ item.name }}</span>
+        </li>
+      } @empty {
+        <p>No workout templates available.</p>
+      }
+    </ul>
+  } @else {
+    <p>No Template found!</p>
+  }
+</div>
