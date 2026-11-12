@@ -1,0 +1,17 @@
+<div class="template-container">
+  <h2>Weekly Workout Templates</h2>
+
+  @if (templates.length > 0) {
+    <p>Select a day to view your workout template:</p>
+  }
+
+  <ul class="template-list">
+    @for (template of templates; track template.id) {
+      <li class="template-item">
+        {{ template.name }}
+      </li>
+    } @empty {
+      <li>No workout templates available.</li>
+    }
+  </ul>
+</div>
