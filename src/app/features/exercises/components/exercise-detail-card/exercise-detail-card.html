@@ -1,0 +1,13 @@
+<article class="card">
+  <h3>{{ exercise().name }}</h3>
+  <p class="body-part">{{ exercise().bodyPart ?? 'Body part not set' }}</p>
+
+  @if (exercise().primaryMuscle) {
+    <ul class="muscles">
+      <li class="muscle primary">{{ exercise().primaryMuscle }}</li>
+      @if (exercise().secondaryMuscle) {
+        <li class="muscle">{{ exercise().secondaryMuscle }}</li>
+      }
+    </ul>
+  }
+</article>
