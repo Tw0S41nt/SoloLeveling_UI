@@ -53,3 +53,14 @@ h2 {
 .count {
   color: #313131;
 }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.empty {
+  color: #313131;
+  font-style: italic;
+}

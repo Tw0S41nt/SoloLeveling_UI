@@ -1,9 +1,10 @@
 import { Component, inject, signal } from '@angular/core';
 import { ExerciseService } from '../../../../services/exercise.service';
 import { BodyPartFilter } from '../../../../shared/components/body-part-filter/body-part-filter';
+import { ExerciseDetailCard } from '../exercise-detail-card/exercise-detail-card';
 
 @Component({
-  imports: [BodyPartFilter],
+  imports: [BodyPartFilter, ExerciseDetailCard],
   selector: 'app-exercise-list',
   styleUrl: './exercise-list.scss',
   templateUrl: './exercise-list.html',

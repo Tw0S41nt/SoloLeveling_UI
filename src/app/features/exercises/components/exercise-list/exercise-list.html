@@ -21,11 +21,11 @@
     <p class="count">{{ exercises().length }} exercises available</p>
   }
 
-  <ul>
+  <div class="grid">
     @for (exercise of exercises(); track exercise.exerciseId) {
-      <li>{{ exercise.name }}</li>
+      <app-exercise-detail-card [exercise]="exercise" />
     } @empty {
-      <li>No exercises yet. Add one above.</li>
+      <p class="empty">No exercises yet. Add one above.</p>
     }
-  </ul>
+  </div>
 </section>
