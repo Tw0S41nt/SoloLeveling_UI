@@ -1,1 +1,19 @@
-<p>dashboard works!</p>
+<div class="dashboard">
+  <h2>Workout Templates</h2>
+
+  <div class="form-group">
+    <input 
+      type="text" 
+      [value]="newTemplateName()" 
+      (input)="onInput($event)" 
+      placeholder="New template name..." 
+    />
+    <button (click)="addNewTemplate()">Add Template</button>
+  </div>
+
+  <div class="list">
+    @for (tmpl of templateService.templates(); track tmpl.id) {
+      <app-template-card [template]="tmpl" />
+    }
+  </div>
+</div>
