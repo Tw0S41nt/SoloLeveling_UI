@@ -1,5 +1,31 @@
-<h2>Exercise List</h2>
-<p>Container for the View All Exercises screen (/exercises). Loads exercises from the API and filters them by body part.</p>
+<section class="exercise-list">
+  <h2>Exercise Library</h2>
 
-<app-body-part-filter />
-<app-exercise-card />
+  <app-body-part-filter />
+
+  <div class="add-exercise">
+    <input
+      type="text"
+      placeholder="New exercise name"
+      aria-label="New exercise name"
+      [value]="newExerciseName()"
+      (input)="onNameInput($event)"
+      (keydown.enter)="addExercise()"
+    />
+    <button type="button" [disabled]="!newExerciseName().trim()" (click)="addExercise()">
+      Add Item
+    </button>
+  </div>
+
+  @if (exercises().length > 0) {
+    <p class="count">{{ exercises().length }} exercises available</p>
+  }
+
+  <ul>
+    @for (exercise of exercises(); track exercise.exerciseId) {
+      <li>{{ exercise.name }}</li>
+    } @empty {
+      <li>No exercises yet. Add one above.</li>
+    }
+  </ul>
+</section>
