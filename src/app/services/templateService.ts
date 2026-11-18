@@ -1,4 +1,6 @@
-import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
+import { Observable } from 'rxjs';
 
 export interface Exercise {
   id: number;
@@ -16,18 +18,12 @@ export interface WorkoutTemplate {
   providedIn: 'root'
 })
 export class TemplateService {
-  templates = signal<WorkoutTemplate[]>([
-    { id: 1, day: 'Monday', name: 'Upper Body Blast', exercises: [] },
-    { id: 2, day: 'Wednesday', name: 'Leg Day Power', exercises: [] }
-  ]);
-
+  private http = inject(HttpClient);
+  private api_url = 'http://localhost:8080/SoloFit/api/templates/allTemplates'
+  getTemplates(): Observable<WorkoutTemplate[]> {
+    return this.http.get<WorkoutTemplate[]>(this.api_url);
+  }
   addTemplate(name: string) {
-    const newTemplate: WorkoutTemplate = {
-      id: Date.now(),
-      day: 'Friday',
-      name: name,
-      exercises: []
-    };
-    this.templates.update(list => [...list, newTemplate]);
+    console.log('Adding template:', name);
   }
 }
