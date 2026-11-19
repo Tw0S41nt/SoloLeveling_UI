@@ -1,28 +1,31 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 
 import { ExerciseService } from './exercise.service';
 
 describe('ExerciseService', () => {
   let service: ExerciseService;
+  let httpTesting: HttpTestingController;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
     service = TestBed.inject(ExerciseService);
+    httpTesting = TestBed.inject(HttpTestingController);
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+  afterEach(() => httpTesting.verify());
 
-  it('should add an exercise with the next id', () => {
-    service.addExercise('  Deadlift  ');
-    const added = service.exercises().at(-1);
-    expect(added?.name).toBe('Deadlift');
-    expect(added?.exerciseId).toBe(5);
-  });
+  it('should GET exercises from the API', () => {
+    let result: unknown;
+    service.getExercises().subscribe((exercises) => (result = exercises));
 
-  it('should ignore blank names', () => {
-    service.addExercise('   ');
-    expect(service.exercises().length).toBe(4);
+    const request = httpTesting.expectOne('http://localhost:8080/SoloFit/api/exercises');
+    expect(request.request.method).toBe('GET');
+    request.flush([{ exerciseId: 1, name: 'Bench Press' }]);
+
+    expect(result).toEqual([{ exerciseId: 1, name: 'Bench Press' }]);
   });
 });

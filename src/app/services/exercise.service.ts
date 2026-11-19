@@ -1,9 +1,14 @@
-import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable, signal } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Exercise } from '../shared/models/exercise.model';
 
 /** Holds the exercise library and the logic for changing it. */
 @Injectable({ providedIn: 'root' })
 export class ExerciseService {
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = 'http://localhost:8080/SoloFit/api/exercises';
+
   // Mock data matching the SoloFit seed rows until we connect to the API
   private readonly exercisesSignal = signal<Exercise[]>([
     {
@@ -49,5 +54,10 @@ export class ExerciseService {
       const nextId = Math.max(0, ...list.map((exercise) => exercise.exerciseId)) + 1;
       return [...list, { exerciseId: nextId, name: trimmed }];
     });
+  }
+
+  /** GET /SoloFit/api/exercises - every exercise in the database. */
+  getExercises(): Observable<Exercise[]> {
+    return this.http.get<Exercise[]>(this.apiUrl);
   }
 }
