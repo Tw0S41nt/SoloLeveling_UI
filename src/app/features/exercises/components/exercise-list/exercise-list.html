@@ -17,15 +17,22 @@
     </button>
   </div>
 
-  @if (exercises().length > 0) {
-    <p class="count">{{ exercises().length }} exercises available</p>
+  @if (loadError()) {
+    <p class="error">Couldn't load exercises. Make sure the SoloFit API is running on port 8080.</p>
+  } @else if (!loaded()) {
+    <p class="status">Loading exercises…</p>
+  } @else if (totalCount() > 0) {
+    <p class="count">{{ totalCount() }} exercises available</p>
+  } @else {
+    <p class="status">No exercises yet. Add one above.</p>
   }
 
   <div class="grid">
     @for (exercise of exercises(); track exercise.exerciseId) {
       <app-exercise-detail-card [exercise]="exercise" />
-    } @empty {
-      <p class="empty">No exercises yet. Add one above.</p>
+    }
+    @for (exercise of addedExercises(); track exercise.exerciseId) {
+      <app-exercise-detail-card [exercise]="exercise" />
     }
   </div>
 </section>

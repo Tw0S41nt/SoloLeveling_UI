@@ -28,4 +28,21 @@ describe('ExerciseService', () => {
 
     expect(result).toEqual([{ exerciseId: 1, name: 'Bench Press' }]);
   });
+
+  it('should give added exercises ids after the fetched ones', () => {
+    service.getExercises().subscribe();
+    httpTesting.expectOne('http://localhost:8080/SoloFit/api/exercises').flush([
+      { exerciseId: 1, name: 'Bench Press' },
+      { exerciseId: 4, name: 'Overhead Press' },
+    ]);
+
+    service.addExercise('  Deadlift  ');
+
+    expect(service.addedExercises()).toEqual([{ exerciseId: 5, name: 'Deadlift' }]);
+  });
+
+  it('should ignore blank names', () => {
+    service.addExercise('   ');
+    expect(service.addedExercises().length).toBe(0);
+  });
 });

@@ -1,48 +1,32 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Exercise } from '../shared/models/exercise.model';
 
-/** Holds the exercise library and the logic for changing it. */
+/** Loads exercises from the SoloFit API and keeps track of ones added in the UI. */
 @Injectable({ providedIn: 'root' })
 export class ExerciseService {
   private readonly http = inject(HttpClient);
   private readonly apiUrl = 'http://localhost:8080/SoloFit/api/exercises';
 
-  // Mock data matching the SoloFit seed rows until we connect to the API
-  private readonly exercisesSignal = signal<Exercise[]>([
-    {
-      exerciseId: 1,
-      name: 'Bench Press',
-      bodyPart: 'Chest',
-      primaryMuscle: 'Chest',
-      secondaryMuscle: 'Triceps',
-    },
-    {
-      exerciseId: 2,
-      name: 'Squat',
-      bodyPart: 'Legs',
-      primaryMuscle: 'Quads',
-      secondaryMuscle: 'Glutes',
-    },
-    {
-      exerciseId: 3,
-      name: 'Bicep Curl',
-      bodyPart: 'Arms',
-      primaryMuscle: 'Biceps',
-      secondaryMuscle: 'Forearms',
-    },
-    {
-      exerciseId: 4,
-      name: 'Overhead Press',
-      bodyPart: 'Shoulders',
-      primaryMuscle: 'Delts',
-      secondaryMuscle: 'Triceps',
-    },
-  ]);
+  /** Highest id seen from the API, so added exercises never reuse a database id. */
+  private highestFetchedId = 0;
 
-  /** Read-only view so components can display exercises but only change them through this service. */
-  readonly exercises = this.exercisesSignal.asReadonly();
+  // The API has no POST for exercises yet, so new ones only live here until the page reloads
+  private readonly addedExercisesSignal = signal<Exercise[]>([]);
+  readonly addedExercises = this.addedExercisesSignal.asReadonly();
+
+  /** GET /SoloFit/api/exercises - every exercise in the database. */
+  getExercises(): Observable<Exercise[]> {
+    return this.http.get<Exercise[]>(this.apiUrl).pipe(
+      tap((exercises) => {
+        this.highestFetchedId = Math.max(
+          this.highestFetchedId,
+          ...exercises.map((exercise) => exercise.exerciseId),
+        );
+      }),
+    );
+  }
 
   /** Adds an exercise with the next free id. Blank names are ignored. */
   addExercise(name: string): void {
@@ -50,14 +34,10 @@ export class ExerciseService {
     if (!trimmed) {
       return;
     }
-    this.exercisesSignal.update((list) => {
-      const nextId = Math.max(0, ...list.map((exercise) => exercise.exerciseId)) + 1;
+    this.addedExercisesSignal.update((list) => {
+      const nextId =
+        Math.max(this.highestFetchedId, ...list.map((exercise) => exercise.exerciseId)) + 1;
       return [...list, { exerciseId: nextId, name: trimmed }];
     });
-  }
-
-  /** GET /SoloFit/api/exercises - every exercise in the database. */
-  getExercises(): Observable<Exercise[]> {
-    return this.http.get<Exercise[]>(this.apiUrl);
   }
 }
