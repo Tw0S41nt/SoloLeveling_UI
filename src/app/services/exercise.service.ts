@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { Exercise } from '../shared/models/exercise.model';
 
 /** Holds the exercise library and the logic for changing it. */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ExerciseService {
   // Mock data matching the SoloFit seed rows until we connect to the API
   private readonly exercisesSignal = signal<Exercise[]>([
