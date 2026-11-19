@@ -1,5 +1,40 @@
 <h2>Create / Edit Workout Template</h2>
-<p>placeholder text aspdihbasdiybaspidyg placeholder text</p>
 
 <app-day-selector></app-day-selector>
-<app-selected-exercise-list></app-selected-exercise-list>
+
+<h3>Available Exercises</h3>
+
+<div class="filters">
+  <button (click)="filter.set('All')">All</button>
+  <button (click)="filter.set('Upper')">Upper</button>
+  <button (click)="filter.set('Lower')">Lower</button>
+</div>
+
+<input
+  type="text"
+  placeholder="Search exercises..."
+  #searchBox
+  (input)="searchText.set(searchBox.value)"
+/>
+
+<div class="exercise-list">
+  @for (exercise of filteredExercises(); track exercise.id) {
+    <div class="exercise-item">
+      <strong>{{ exercise.name }}</strong>
+      <p>{{ exercise.muscleGroup }}</p>
+
+      <button
+        (click)="addExercise(exercise)"
+        [disabled]="isSelected(exercise.id)">
+        {{ isSelected(exercise.id) ? 'Added' : 'Add Exercise' }}
+      </button>
+    </div>
+  } @empty {
+    <p>No exercises found.</p>
+  }
+</div>
+
+<app-selected-exercise-list
+  [exercises]="templateService.selectedExercises()"
+  (remove)="removeExercise($event)">
+</app-selected-exercise-list>

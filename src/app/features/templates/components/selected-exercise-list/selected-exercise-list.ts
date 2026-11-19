@@ -1,9 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, input, output } from '@angular/core';
+import { Exercise } from '../../../../shared/models/exercise.model';
+import { ExerciseDetailCard } from '../exercise-detail-card/exercise-detail-card';
 
 @Component({
-  imports: [],
   selector: 'app-selected-exercise-list',
-  styleUrl: './selected-exercise-list.scss',
+  standalone: true,
+  imports: [ExerciseDetailCard],
   templateUrl: './selected-exercise-list.html',
+  styleUrl: './selected-exercise-list.scss'
 })
-export class SelectedExerciseList {}
+export class SelectedExerciseList {
+  exercises = input.required<Exercise[]>();
+  remove = output<string>();
+}

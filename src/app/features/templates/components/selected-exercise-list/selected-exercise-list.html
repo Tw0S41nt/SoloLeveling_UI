@@ -1,2 +1,10 @@
 <h3>Selected Exercises</h3>
-<p>placeholder text aspdihbasdiybaspidyg placeholder text</p>
+
+@for (exercise of exercises(); track exercise.id) {
+  <app-exercise-detail-card
+    [exercise]="exercise"
+    (remove)="remove.emit($event)">
+  </app-exercise-detail-card>
+} @empty {
+  <p>No exercises selected yet.</p>
+}
